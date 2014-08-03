@@ -24,7 +24,7 @@ function generateKeyList(stdKeyLength,_numberOfKeys)
 end
 
 function encode(message,key)
-  text=string.gsub(text,"[ ]","_") --replace spaces with underscores
+  text=string.gsub(message,"[ ]","_") --replace spaces with underscores for encoding
   local encodedMessage=""
   local newLayer=""
   for i=1,#text do
