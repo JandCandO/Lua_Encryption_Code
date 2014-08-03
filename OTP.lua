@@ -1,7 +1,7 @@
 
 --editables START
-local standardKeyLength=40
-local numberOfKeys=4
+local standardKeyLength=50
+local numberOfKeys=3
 --editables END
 
 
@@ -12,7 +12,7 @@ local keyList={}
 function generateKey(keyLength)
   local key={}
   for i=1,keyLength do
-    key[i]=math.random(1,27)
+    key[i]=math.random(1,#alphabet)
   end
   return key
 end
@@ -64,8 +64,20 @@ end
 
 local encryptions={}
 
+print(string.rep("-",51))
+print()
 generateKeyList(standardKeyLength,numberOfKeys)
 print(numberOfKeys.." keys were generated, all "..standardKeyLength.." characters in length.\n")
+for i=1,#keyList do
+    print("Key "..i..":")
+    for j=1,#keyList[i] do
+       io.write(":"..keyList[i][j])
+    end
+    print("\n")
+end
+print()
+print(string.rep("-",51))
+print()
 for i=1,numberOfKeys do
   print("Enter a message to be encoded:")
   local message=io.read()
