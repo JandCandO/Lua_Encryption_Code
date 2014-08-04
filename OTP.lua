@@ -83,7 +83,7 @@ for i=1,numberOfKeys do
   local message=io.read()
   print()
   encoded=encode(message,keyList[i])
-  print('"'..message..'" was encrypted to "'..encoded..'" using key '..i..".\n")
+  print('"'..message..'"\nwas encrypted to\n"'..encoded..'"\nusing key '..i..".\n")
   table.insert(encryptions,encoded)
 end
 print()
@@ -91,5 +91,5 @@ print(string.rep("-",51))
 print()
 for i=1,numberOfKeys do
   local decoded=decode(encryptions[i],keyList[i])
-  print('"'..encryptions[i]..'" was decrypted to "'..decoded..'" using key '..i..".\n")
+  print('"'..encryptions[i]..'"\nwas decrypted to\n"'..decoded..'"\nusing key '..i..".\n")
 end
