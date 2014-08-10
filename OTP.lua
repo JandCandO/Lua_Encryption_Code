@@ -1,6 +1,6 @@
 
 --editables START
-local standardKeyLength=256
+local standardKeyLength=128
 local numberOfKeys=3
 --editables END
 
@@ -80,6 +80,7 @@ print(string.rep("-",51))
 print()
 for i=1,numberOfKeys do
   print("Enter a message to be encoded:")
+  io.write(">")
   local message=io.read()
   print()
   encoded=encode(message,keyList[i])
