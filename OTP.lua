@@ -2,6 +2,7 @@
 --editables START
 local standardKeyLength=128
 local numberOfKeys=3
+math.randomseed(os.time())
 --editables END
 
 
