@@ -1,97 +1,118 @@
-
---editables START
-local standardKeyLength=128
-local numberOfKeys=3
+-- Editable Variables Start --
+local standardKeyLength = 128
+local numberOfKeys = 2
 math.randomseed(os.time())
---editables END
+-- Editable Variables End --
 
+local function chararray(str)
+	local tb = {}
+	for i = 1, str:len(), 1 do
+		table.insert(tb, str:sub(i, i))
+	end;
+	return tb
+end;
+local alphabet = chararray("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_1234567890.,?!()/-=+*%&^$#@<>~`;:")
 
-local alphabet={"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","_","1","2","3","4","5","6","7","8","9","0",".",",","?","!","(",")","/","-","=","+","*","%","&","^","$","#","@","<",">","~","`",";",":"}
-
-local keyList={}
+local keyList = {}
 
 function generateKey(keyLength)
-  local key={}
-  for i=1,keyLength do
-    key[i]=math.random(1,#alphabet)
-  end
-  return key
+	local Key = {}
+	for i = 1, keyLength do
+		Key[i] = math.random(1, #alphabet)
+	end
+	return Key
 end
 
-function generateKeyList(stdKeyLength,_numberOfKeys)
-  for i=1,_numberOfKeys do
-    table.insert(keyList,generateKey(stdKeyLength))
-  end
+function generateKeyList(stdKeyLength, _numberOfKeys)
+	for i = 1, _numberOfKeys do
+		table.insert(keyList, generateKey(stdKeyLength))
+	end
 end
 
-function encode(message,key)
-  text=string.gsub(message,"[ ]","_") --replace spaces with underscores for encoding
-  local encodedMessage=""
-  local newLayer=""
-  for i=1,#text do
-    for j=1,#alphabet do
-      if string.sub(text,i,i)==alphabet[j]then
-        newLayer=j+key[i]
-        if newLayer>#alphabet then newLayer=newLayer-#alphabet end
-        encodedMessage=encodedMessage..alphabet[newLayer]
-      end
-    end
-  end
-  return encodedMessage
+function Encrypt(Message, Key)
+	text = string.gsub(Message, "[ ]", "_")
+  --Replace spaces with underscores for encoding
+	local encodedMessage = ""
+	local newLayer = ""
+	for i = 1, #text do
+		for j = 1, #alphabet do
+			if string.sub(text, i, i) == alphabet[j] then
+				newLayer = j + Key[i]
+				if newLayer > #alphabet then
+					newLayer = newLayer - #alphabet
+				end
+				encodedMessage = encodedMessage .. alphabet[newLayer]
+			end
+		end
+	end
+	return encodedMessage
 end
 
-function decode(crypt,key)
-  local decodedMessage=""
-  local newLayer=""
-  for i=1,#crypt do
-    for j=1,#alphabet do
-      if string.sub(crypt,i,i)==alphabet[j]then
-        newLayer=j-key[i]
-        if newLayer<1 then newLayer=newLayer+#alphabet end
-        decodedMessage=decodedMessage..alphabet[newLayer]
-      end
-    end
-  end
-  return string.gsub(decodedMessage,"[_]"," ")
+function Decrypt(Message, Key)
+	local decodedMessage = ""
+	local newLayer = ""
+	for i = 1, #Message do
+		for j = 1, #alphabet do
+			if string.sub(Message, i, i) == alphabet[j] then
+				newLayer = j - Key[i]
+				if newLayer < 1 then
+					newLayer = newLayer + #alphabet
+				end
+				decodedMessage = decodedMessage .. alphabet[newLayer]
+			end
+		end
+	end
+	return string.gsub(decodedMessage, "[_]", " ")
 end
 
 function useUserKey(userKey)
-  local key={}
-  for m in string.gmatch(userKey, "(%d+)") do
-    table.insert(key,m)
-  end
-  return key
+	local Key = {}
+	for m in string.gmatch(userKey, "(%d+)") do
+		table.insert(Key, m)
+	end
+	return Key
 end
 
-local encryptions={}
+local encryptions = {}
 
-print(string.rep("-",51))
+print(string.rep("-", 51))
 print()
-generateKeyList(standardKeyLength,numberOfKeys)
-print(numberOfKeys.." keys were generated, all "..standardKeyLength.." characters in length.\n")
-for i=1,#keyList do
-    print("Key "..i..":")
-    for j=1,#keyList[i] do
-       io.write(":"..keyList[i][j])
-    end
-    print("\n")
+generateKeyList(standardKeyLength, numberOfKeys)
+if numberOfKeys > 1 then
+print(numberOfKeys .. " keys were generated, all " .. standardKeyLength .. " characters in length.\n")
+for i = 1, #keyList do
+	print("Key " .. i .. ":")
+	for j = 1, #keyList[i] do
+		io.write(":" .. keyList[i][j])
+	end
+	print("\n")
+end
+else
+  print(numberOfKeys .. " key was generated, being " .. standardKeyLength .. " characters in length.\n")
+for i = 1, #keyList do
+	print("Key " .. i .. ":")
+	for j = 1, #keyList[i] do
+		io.write(":" .. keyList[i][j])
+	end
+	print("\n")
+end
 end
 print()
-print(string.rep("-",51))
+print(string.rep("-", 51))
 print()
-for i=1,numberOfKeys do
-  print("Enter a message to be encoded:")
-  io.write(">")
-  local message=io.read()
-  print()
-  encoded=encode(message,keyList[i])
-  print('"'..message..'"\nwas encrypted to\n"'..encoded..'"\nusing key '..i..".\n")
-  table.insert(encryptions,encoded)
+for i = 1, numberOfKeys do
+	print("Enter a Message to be encoded:")
+	io.write(">")
+	local Message = io.read()
+	print()
+	encoded = Encrypt(Message, keyList[i])
+	print('"' .. Message .. '"\nwas encrypted to\n"' .. encoded .. '"\nusing Key ' .. i .. ".\n")
+	table.insert(encryptions, encoded)
 end
 print()
-print(string.rep("-",51))
+print(string.rep("-", 51))
 print()
-for i=1,numberOfKeys do
-  local decoded=decode(encryptions[i],keyList[i])
-  print('"'..encryptions[i]..'"\nwas decrypted to\n"'..decoded..'"\nusing key '..i..".\n")
+for i = 1, numberOfKeys do
+	local decoded = Decrypt(encryptions[i], keyList[i])
+	print('"' .. encryptions[i] .. '"\nwas decrypted to\n"' .. decoded .. '"\nusing Key ' .. i .. ".\n")
 end
