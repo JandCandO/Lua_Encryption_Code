@@ -1,5 +1,5 @@
 -- Editable Variables Start --
-local standardKeyLength = 16
+local standardKeyLength = 128
 local numberOfKeys = 2
 math.randomseed(os.time())
 -- Editable Variables End --
